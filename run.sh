@@ -8,5 +8,5 @@ else
     exit 1
 fi
 
-# Run ComfyUI on port 6003
-python main.py --port 6003 --listen 0.0.0.0
+# Run ComfyUI on port 6003 with the manager enabled
+python main.py --port 6003 --listen 0.0.0.0 --enable-manager
