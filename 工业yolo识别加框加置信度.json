@@ -1,0 +1,135 @@
+{
+  "last_node_id": 10,
+  "last_link_id": 15,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "VHS_LoadVideo",
+      "pos": [100, 100],
+      "size": [315, 200],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [1, 10], "shape": 3},
+        {"name": "frame_count", "type": "INT", "links": null, "shape": 3},
+        {"name": "audio", "type": "AUDIO", "links": null, "shape": 3},
+        {"name": "video_info", "type": "VHS_VIDEOINFO", "links": null, "shape": 3}
+      ],
+      "properties": {},
+      "widgets_values": ["factory_video.mp4", "video", 0, 0, 0, true]
+    },
+    {
+      "id": 2,
+      "type": "UltralyticsDetectorProvider",
+      "pos": [100, 400],
+      "size": [315, 80],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "BBOX_DETECTOR", "type": "BBOX_DETECTOR", "links": [2], "shape": 3}
+      ],
+      "properties": {},
+      "widgets_values": ["yolov8n.pt"]
+    },
+    {
+      "id": 3,
+      "type": "BBoxDetectorSEGS",
+      "pos": [500, 100],
+      "size": [315, 150],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"name": "bbox_detector", "type": "BBOX_DETECTOR", "link": 2},
+        {"name": "image", "type": "IMAGE", "link": 1}
+      ],
+      "outputs": [
+        {"name": "SEGS", "type": "SEGS", "links": [3], "shape": 3}
+      ],
+      "properties": {},
+      "widgets_values": [0.5, 0.5, 0, 10, "all"]
+    },
+    {
+      "id": 4,
+      "type": "SEGSVisualize",
+      "pos": [900, 100],
+      "size": [315, 100],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {"name": "image", "type": "IMAGE", "link": 1},
+        {"name": "segs", "type": "SEGS", "link": 3}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [11], "shape": 3}
+      ],
+      "properties": {},
+      "widgets_values": [1.0, true, 2]
+    },
+    {
+      "id": 5,
+      "type": "NunchakuSVDLoader",
+      "pos": [100, 600],
+      "size": [315, 80],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "SVD_MODEL", "type": "SVD_MODEL", "links": [5], "shape": 3}
+      ],
+      "properties": {},
+      "widgets_values": ["svd_xt_4bit.safetensors"]
+    },
+    {
+      "id": 6,
+      "type": "NunchakuSVDInference",
+      "pos": [900, 300],
+      "size": [315, 150],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {"name": "svd_model", "type": "SVD_MODEL", "link": 5},
+        {"name": "image", "type": "IMAGE", "link": 10}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [], "shape": 3}
+      ],
+      "properties": {},
+      "widgets_values": [25, 6, 1.0]
+    },
+    {
+      "id": 7,
+      "type": "VHS_VideoCombine",
+      "pos": [1300, 100],
+      "size": [315, 200],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 11}
+      ],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": ["factory_output", 24, "mp4", "H264", true]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 3, 1, "IMAGE"],
+    [2, 2, 0, 3, 0, "BBOX_DETECTOR"],
+    [3, 3, 0, 4, 1, "SEGS"],
+    [10, 1, 0, 6, 1, "IMAGE"],
+    [11, 4, 0, 7, 0, "IMAGE"],
+    [5, 5, 0, 6, 0, "SVD_MODEL"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
